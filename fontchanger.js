@@ -4,7 +4,7 @@ const FontChangerOTron9000 = new Proxy(
     {
         parentQ: 'body',
         notResizeQ: '.not-resize',
-        resizeQ: 'body *:not(.not-resize)',
+        resizeQ: 'body > *:not(.not-resize):not(.not-resize *)',
         fontChangeQ: '.fontSize',
         fontSetQ: '.fontSet',
         fontResetQ: '.resetSize',
@@ -31,6 +31,12 @@ const FontChangerOTron9000 = new Proxy(
             this.sizeTo(
                 (parseFloat(document.querySelector(this.resizeQ).style.zoom) || 1) + parseFloat(size)
             );
+        },
+        grayScale() {
+            document.querySelector('body').style.setProperty('filter', 'grayscale(1)');
+        },
+        normal() {
+            document.querySelector('body').style.setProperty('filter', '');
         },
         // T    A   B   S
         doIt() {
@@ -65,7 +71,7 @@ const FontChangerOTron9000 = new Proxy(
     {
         set(target, prop, value) {
             target[prop] = value;
-            target.resizeQ = `${target.parentQ} *:not(${target.notResizeQ})`;
+            target.resizeQ = `${target.parentQ} > *:not(${target.notResizeQ}):not(${target.notResizeQ} *)`;
             target.sizeTo = function (size) {
                 if (this.anime) {
                     anime({
@@ -120,4 +126,5 @@ document.querySelector('font-changer-o-tron-9000').outerHTML = `
 <button class="fontSet   not-resize" value="1" style="font-size: 0.5rem">A</button>
 <button class="fontSet   not-resize" value="2" style="font-size: 0.75rem">A</button>
 <button class="fontSet   not-resize" value="3" style="font-size: 1rem">A</button>
+
 `;
